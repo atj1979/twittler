@@ -24,54 +24,57 @@
         //build html elements here
         $body.append('<h2>New Heading</h2>');
         $body.append('<input id="visitorTweet" type="text" value="Your Tweet here!"></input>');
-        $body.append('<button type="button" class="btn">Update Tweets</button>');
+        $body.append('<button type="button" class="btn" id="updateTweets">Update Tweets</button>');
         $body.append('<button type="button" class="btn">Show 10</button>');
+        $body.append('<div id="tweetArea"></div>')
+        $body.append('<div id="userTimeLine"></div>');
+        //show totals of tweets for checking results
         for (var tweets in streams.users){
           console.log(tweets + " # of tweets " + streams.users[tweets].length)
         }
 
+        //if a user is supplied, get that user data else get the default timeline
         var showTweets = function(user){
+          
           if (user){
-          var index = streams.users[user].length-1;
-          console.log(index);
-        } else {
-          var index = streams.home.length - 1;
-        }
-          while(index >= 0){
-            if (user){
-              var tweet = streams.users[user][index];
-            } else {
-              var tweet = streams.home[index];
-            }
-            var $tweet = $('<div></div>');
-            //build the tweet structure here
-            //3 lines 
-            //line 1 @tweetuser:
-            //line 2 "tweet message here"
-            //line 3 timestamp here align right
-            
-
-            var myTweet='<h4 id="user">@'+tweet.user+'</h4><h3><small>'+tweet.created_at+'</small></h3><br><div id="message">'+tweet.message+'</div><br><hr></hr>';
-            $body.append(myTweet);
-            //$tweet.text('@' + tweet.user +': ' + tweet.message + " " + tweet.created_at);
-            //$tweet.appendTo($body);
-            index -= 1;
-          }  
+            var location = "#userTimeLine";
+            var index = streams.users[user].length-1;
+            //total tweets of selected timeline
+            console.log(index);
+          } else {
+            var location ="#tweetArea"
+            var index = streams.home.length - 1;
+          }
+            while(index >= 0){
+              if (user){
+                var tweet = streams.users[user][index];
+              } else {
+                var tweet = streams.home[index];
+              }
+              var $tweet = $('<div></div>');
+              //basic tweet here - needs more formatting work
+              var myTweet='<table class="totalTweet"><th class="user" data-name='+tweet.user+'>@'+tweet.user+'</th><tr class="message"><td>'+tweet.message+'</td></tr><tr><td>'+tweet.created_at+'</td></tr></table>';
+              $(location).append(myTweet);
+              index -= 1;
+            }  
         };
-        showTweets('douglascalhoun');
+        var updateTw = function (){
+          //i think we want to prepend here based on index
+        };
+        showTweets();
+        $('.user').click(function (){
+          var selUser = $('.user').data('name');
+          console.log(selUser);
+          //clear the div
+          $('#userTimeLine').html('');
+          showTweets(selUser);
+          
+          
+        });
+
         
-        // $('#user').addClass('.text-primary');
+        
         //get user timeline
-        //$('#user').click(function(){
-          //get the user name 
-          //streams.user[name of clicked] user
-          //var selUser = $(this).innerHTML;
-          //insert that into streams.
-          //var userInd = streams.home.user.length-1;
-          //while (userInd >=0){
-          //  var
-          //}
-        //});
       });
 
     </script>

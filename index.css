@@ -1,1 +1,14 @@
 body {left : 5px;}
+.totalTweet {
+	border : 1px solid black;
+	width : 400px;
+	padding : 20px;
+	margin : 20px;
+}
+#userTimeLine{
+	position: relative;
+	background-color: orange;
+	animation-name:slidein;
+	left : 100px;
+	top : 100px;
+}
