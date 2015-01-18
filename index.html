@@ -1,82 +1,89 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <title>Twittler</title>
   </head>
   <body>
-    
-    
-    
-    
-<!-- 
-    <div id="name">Name Goes here</div></br>
-    <div id="message">The tweet will go here</div></br>
-    <div id="time">Time will go here</div> -->
+    <div class="title"></div>
+    <div class="tweets"></div>
     <script>
 
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
-        //build html elements here
-        $body.append('<h2>New Heading</h2>');
-        $body.append('<input id="visitorTweet" type="text" value="Your Tweet here!"></input>');
-        $body.append('<button type="button" class="btn" id="updateTweets">Update Tweets</button>');
-        $body.append('<button type="button" class="btn">Show 10</button>');
-        $body.append('<div id="tweetArea"></div>')
-        $body.append('<div id="userTimeLine"></div>');
-        //show totals of tweets for checking results
-        for (var tweets in streams.users){
-          console.log(tweets + " # of tweets " + streams.users[tweets].length)
-        }
 
-        //if a user is supplied, get that user data else get the default timeline
-        var showTweets = function(user){
-          
-          if (user){
-            var location = "#userTimeLine";
-            var index = streams.users[user].length-1;
-            //total tweets of selected timeline
-            console.log(index);
-          } else {
-            var location ="#tweetArea"
-            var index = streams.home.length - 1;
-          }
-            while(index >= 0){
-              if (user){
-                var tweet = streams.users[user][index];
-              } else {
-                var tweet = streams.home[index];
-              }
+        $(".title").append('<h2 class="title">Twittler</h2>');
+        
+        $(".tweets").append('<button type="button" class="btn" id="updateTweets">Update Tweets</button>');
+        $(".tweets").append('<input id="visitorTweet" type="text" value="Your Tweet here!"></input>');
+        $(".tweets").append('<input id="tweetMe" class="btn" type=button value="Tweet Me!"></input>')
+        $(".tweets").append('<button type="button" id="clear" class="btn clear">Clear User Tweets</button>');
+        $(".tweets").append('<div id="tweetArea"></div>');
+        $(".tweets").append('<div id="userTimeLine"></div>');
+        
+        var streamSetup = function (postLocation){
+          var counter = 0;
+          var displayed = 0;
+          var buildTweet = function (tweetStream){
+            var index = tweetStream.length - 1;
+            var tweetsLeft = tweetStream.length - displayed;
+            var tweet = tweetStream;
+            while((counter+displayed) <= index){
               var $tweet = $('<div></div>');
-              //basic tweet here - needs more formatting work
-              var myTweet='<table class="totalTweet"><th class="user" data-name='+tweet.user+'>@'+tweet.user+'</th><tr class="message"><td>'+tweet.message+'</td></tr><tr><td>'+tweet.created_at+'</td></tr></table>';
-              $(location).append(myTweet);
-              index -= 1;
-            }  
+              var myTweet='<table class="totalTweet"><th class="user" data-name='+tweet[displayed + counter].user+'>@'+tweet[displayed + counter].user+'</th><td></td>'
+              myTweet=myTweet+'<tr class="message"><td>'+tweet[displayed + counter].message+'</td><td></td></tr>'
+              myTweet=myTweet+'<tr><td>'+tweet[displayed + counter].created_at+'</td><td>'+(displayed + counter)+'</td></tr></table>';
+              $(postLocation).prepend(myTweet);
+              counter++;                   
+            } 
+            displayed+=counter;
+            counter=0;
+            console.log("Displayed: " + displayed);
+            if (tweet !== streams.home){
+              displayed = 0;
+              $('#clear').removeClass("invisible");
+            }
+          };
+          return buildTweet;            
         };
-        var updateTw = function (){
-          //i think we want to prepend here based on index
-        };
-        showTweets();
-        $('.user').click(function (){
-          var selUser = $('.user').data('name');
-          console.log(selUser);
-          //clear the div
-          $('#userTimeLine').html('');
-          showTweets(selUser);
-          
-          
-        });
 
+        var userStream = streamSetup("#userTimeLine");
+        var homeStream = streamSetup("#tweetArea")
+
+        var selectUser = function (){
+          var allTweets = document.getElementsByClassName("user");
+          for (var i =0; i<allTweets.length; i++){
+            allTweets[i].addEventListener("click", function (){
+              var selUser = $(this).data("name");      
+              $('#userTimeLine').empty();
+              userStream(streams.users[selUser]);
+            })
+          }
+        }
+        
+        $('#clear').click(function (){
+          $('#userTimeLine').empty();
+          $('#clear').addClass("invisible");
+        });
+        
+        $('#updateTweets').click(function(){
+          homeStream(streams.home)
+          selectUser();
+        });
+        
+        homeStream(streams.home)
+        selectUser();
+        $('#clear').addClass("invisible");
         
         
-        //get user timeline
       });
 
     </script>
+
   </body>
 </html>

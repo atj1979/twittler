@@ -1,14 +1,34 @@
-body {left : 5px;}
 .totalTweet {
 	border : 1px solid black;
 	width : 400px;
 	padding : 20px;
-	margin : 20px;
+	margin : 10px;
+	margin-left: 40px;
 }
 #userTimeLine{
-	position: relative;
-	background-color: orange;
-	animation-name:slidein;
-	left : 100px;
+	position:absolute;
+	left : 500px;
 	top : 100px;
+}
+.title{
+	font-family: 'Gloria Hallelujah', cursive;
+	font-size: 44px;
+	background-color: #F3843E;
+	color: #6E6E6E;
+}
+.tweets{
+	
+	color: #FF5A09	;
+	background-color: #6E6E6E;
+}
+.invisible{
+	visibility : hidden;
+}
+.clear{
+	position: absolute;
+	left : 800px;
+	top: 60px;
+}
+.btn{
+	color:white;
 }
